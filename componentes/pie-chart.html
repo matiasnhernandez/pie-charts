@@ -1,0 +1,98 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<script src="../bower_components/chart.js/dist/Chart.bundle.js"></script>
+
+<dom-module id="pie-chart">
+
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            canvas {
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
+        </style>
+   
+        <div id="canvas-holder">
+            <canvas id="myChart"></canvas>
+        </div>
+
+    </template>
+
+    <script>
+
+
+        class PieChart extends Polymer.Element {
+
+            constructor() {
+                super();
+            }
+
+            static get is(){
+                return 'pie-chart';
+            }
+
+            static get properties(){
+                return {
+                    tipo: {
+                        type: String,
+                        value: 'doughnut'
+                    },
+                    titulo: {
+                        type: String,
+                        value: 'Chart'
+                    },
+                    titulos: Array,
+                    colores: Array,
+                    datos: Array
+                 };
+            }
+
+            cargar(){
+
+                var ctx = this.$.myChart.getContext('2d');
+
+                var config = {
+                    type: this.tipo,
+                    data: {
+                        datasets: [{
+                            data: this.datos,
+                            backgroundColor: this.colores,
+                            label: 'Dataset'
+                        }],
+                        labels: this.titulos
+                    },
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: this.titulo
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        }
+                    }
+                };
+
+                window.myDoughnut = new Chart(ctx, config);
+                } 
+
+            connectedCallback(){
+                super.connectedCallback();  
+                this.cargar();
+            } 
+        }
+        
+        window.customElements.define(PieChart.is, PieChart);
+
+    </script>
+
+</dom-module>
+
+
